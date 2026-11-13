@@ -1,0 +1,6 @@
+{
+  "name": "iguide",
+  "description": "Complete Holy Quran with audio recitations, Tafsir, offline reading capabilities, and 15km nearby mosque finder with seamless navigation.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
