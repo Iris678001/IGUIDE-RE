@@ -292,11 +292,13 @@ export default function App() {
         )}
 
         {/* TAB: MOSQUES */}
-        {activeTab === 'mosques' && (
-          <div className="space-y-4">
-            <MosqueFinderView />
-          </div>
-        )}
+        <div className={activeTab === 'mosques' ? 'space-y-4' : 'hidden'}>
+          <MosqueFinderView
+            userLocation={userLocation}
+            onRequestLocation={requestUserLocation}
+            isActive={activeTab === 'mosques'}
+          />
+        </div>
 
         {/* TAB: QIBLA */}
         {activeTab === 'qibla' && (

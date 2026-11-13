@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { UserLocation } from '../../types/mosque';
@@ -7,8 +7,13 @@ import {
   KERALA_DISTRICTS,
   isCoordinatesInKerala,
 } from '../../services/mosqueService';
-import { KeralaMosqueRecord } from '../../data/keralaMosques';
-import { calculateQiblaBearing, formatDistance, generateNavigationUrl } from '../../utils/distance';
+import { KeralaMosqueRecord, KERALA_MOSQUES_DATASET } from '../../data/keralaMosques';
+import {
+  calculateBearing,
+  calculateDistanceKm,
+  formatDistance,
+  generateNavigationUrl,
+} from '../../utils/distance';
 import {
   RiCompass3Line,
   RiExternalLinkLine,
@@ -25,16 +30,42 @@ import {
 
 interface MosqueFinderViewProps {
   apiKey?: string;
+  userLocation?: UserLocation | null;
+  onRequestLocation?: () => void;
+  isActive?: boolean;
 }
 
 type MapTileStyle = 'osm' | 'satellite';
 
-export const MosqueFinderView: React.FC<MosqueFinderViewProps> = () => {
-  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
+  userLocation: propUserLocation,
+  onRequestLocation: propOnRequestLocation,
+  isActive = true,
+}) => {
+  const [internalLocation, setInternalLocation] = useState<UserLocation | null>(null);
+  const userLocation = propUserLocation ?? internalLocation;
+
   const [isLocating, setIsLocating] = useState(false);
   const [locationNotice, setLocationNotice] = useState<string | null>(null);
-  const [mosques, setMosques] = useState<KeralaMosqueRecord[]>([]);
-  const [selectedMosque, setSelectedMosque] = useState<KeralaMosqueRecord | null>(null);
+
+  // Synchronously compute initial curated Kerala mosques sorted by center distance
+  // This completely prevents layout shift from empty list to filled list
+  const initialMosques = useMemo(() => {
+    const lat = userLocation?.lat ?? 11.2588;
+    const lng = userLocation?.lng ?? 75.7804;
+    return KERALA_MOSQUES_DATASET.filter((m) => isCoordinatesInKerala(m.lat, m.lng))
+      .map((m) => ({
+        ...m,
+        distanceKm: calculateDistanceKm(lat, lng, m.lat, m.lng),
+        bearingDeg: calculateBearing(lat, lng, m.lat, m.lng),
+      }))
+      .sort((a, b) => (a.distanceKm ?? 0) - (b.distanceKm ?? 0));
+  }, []);
+
+  const [mosques, setMosques] = useState<KeralaMosqueRecord[]>(initialMosques);
+  const [selectedMosque, setSelectedMosque] = useState<KeralaMosqueRecord | null>(
+    initialMosques[0] || null
+  );
   const [selectedDistrict, setSelectedDistrict] = useState<string>('all');
   const [radiusKm, setRadiusKm] = useState(15);
   const [activeTab, setActiveTab] = useState<'split' | 'map' | 'list'>('split');
@@ -48,6 +79,7 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = () => {
   const tileLayerRef = useRef<L.TileLayer | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const userMarkerRef = useRef<L.Marker | null>(null);
+  const hasInitiallyCenteredRef = useRef(false);
 
   const activeCenterLat = userLocation?.lat ?? 11.2588;
   const activeCenterLng = userLocation?.lng ?? 75.7804;
@@ -70,12 +102,15 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = () => {
 
   const requestCurrentLocation = useCallback(() => {
     setIsLocating(true);
-    setLocationNotice(null);
+
+    if (propOnRequestLocation) {
+      propOnRequestLocation();
+    }
 
     if (!navigator.geolocation) {
-      setLocationNotice('GPS not available. Centered on Kozhikode, Kerala.');
+      setLocationNotice('Centered on Kozhikode');
       const fallback: UserLocation = { lat: 11.2588, lng: 75.7804, timestamp: Date.now() };
-      setUserLocation(fallback);
+      setInternalLocation(fallback);
       void loadMosques(fallback.lat, fallback.lng, radiusKm);
       setIsLocating(false);
       return;
@@ -86,46 +121,42 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = () => {
         const { latitude, longitude, accuracy } = pos.coords;
         const insideKerala = isCoordinatesInKerala(latitude, longitude);
 
-        if (insideKerala) {
-          const loc: UserLocation = {
-            lat: latitude,
-            lng: longitude,
-            accuracyMeters: accuracy,
-            timestamp: pos.timestamp,
-          };
-          setUserLocation(loc);
-          setLocationNotice('Acquired your live GPS location in Kerala.');
-          void loadMosques(latitude, longitude, radiusKm);
-        } else {
-          const fallback: UserLocation = {
-            lat: 11.2588,
-            lng: 75.7804,
-            accuracyMeters: accuracy,
-            timestamp: pos.timestamp,
-          };
-          setUserLocation(fallback);
-          setLocationNotice(
-            `GPS detected outside Kerala (${latitude.toFixed(2)}°, ${longitude.toFixed(2)}°). Centered on Kozhikode.`
-          );
-          void loadMosques(fallback.lat, fallback.lng, radiusKm);
+        const targetLat = insideKerala ? latitude : 11.2588;
+        const targetLng = insideKerala ? longitude : 75.7804;
+
+        const loc: UserLocation = {
+          lat: targetLat,
+          lng: targetLng,
+          accuracyMeters: accuracy,
+          timestamp: pos.timestamp,
+        };
+        setInternalLocation(loc);
+        setLocationNotice(insideKerala ? 'Live GPS acquired' : 'Centered on Kozhikode');
+
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.flyTo([targetLat, targetLng], 13, { duration: 1 });
         }
+        void loadMosques(targetLat, targetLng, radiusKm);
         setIsLocating(false);
       },
       (err) => {
         console.warn('Geolocation failed:', err.message);
         const fallback: UserLocation = { lat: 11.2588, lng: 75.7804, timestamp: Date.now() };
-        setUserLocation(fallback);
-        setLocationNotice('Could not retrieve GPS. Showing Malabar & Kerala Masajid.');
+        setInternalLocation(fallback);
+        setLocationNotice('Showing Kerala Masajid');
         void loadMosques(fallback.lat, fallback.lng, radiusKm);
         setIsLocating(false);
       },
       { enableHighAccuracy: true, timeout: 8000 }
     );
-  }, [loadMosques, radiusKm]);
+  }, [loadMosques, radiusKm, propOnRequestLocation]);
 
+  // Request location only if user location is not yet known
   useEffect(() => {
-    requestCurrentLocation();
-  }, [requestCurrentLocation]);
+    if (!userLocation && !hasInitiallyCenteredRef.current) {
+      requestCurrentLocation();
+    }
+  }, []);
 
   const handleSwitchTileStyle = (style: MapTileStyle) => {
     setTileStyle(style);
@@ -152,14 +183,20 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = () => {
     tileLayerRef.current = newLayer;
   };
 
+  // Initialize Map ONCE on mount with ResizeObserver - Never jerk on state changes
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
     if (!mapInstanceRef.current) {
+      const initialLat = userLocation?.lat ?? 11.2588;
+      const initialLng = userLocation?.lng ?? 75.7804;
       const map = L.map(mapContainerRef.current, {
         zoomControl: true,
         attributionControl: false,
-      }).setView([activeCenterLat, activeCenterLng], 12);
+        preferCanvas: true,
+        fadeAnimation: true,
+        markerZoomAnimation: true,
+      }).setView([initialLat, initialLng], 12);
 
       const baseTile = L.tileLayer(
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -176,10 +213,52 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = () => {
       markersLayerRef.current = markersGroup;
 
       mapInstanceRef.current = map;
-    } else {
-      mapInstanceRef.current.setView([activeCenterLat, activeCenterLng], 12);
+      if (userLocation) {
+        hasInitiallyCenteredRef.current = true;
+      }
     }
-  }, [activeCenterLat, activeCenterLng]);
+
+    // Stable ResizeObserver: ensures map size settles cleanly with zero jerk or misalignment
+    const resizeObserver = new ResizeObserver(() => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.invalidateSize({ debounceMoveend: true });
+      }
+    });
+    resizeObserver.observe(mapContainerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+        tileLayerRef.current = null;
+        markersLayerRef.current = null;
+        userMarkerRef.current = null;
+      }
+    };
+  }, []);
+
+  // Smooth invalidateSize when tab becomes active
+  useEffect(() => {
+    if (isActive && mapInstanceRef.current) {
+      const id = requestAnimationFrame(() => {
+        mapInstanceRef.current?.invalidateSize();
+      });
+      return () => cancelAnimationFrame(id);
+    }
+  }, [isActive]);
+
+  // Smooth, animated glide if user location arrives later (NO sudden jerk/snap)
+  useEffect(() => {
+    if (!mapInstanceRef.current || !userLocation) return;
+    if (!hasInitiallyCenteredRef.current) {
+      hasInitiallyCenteredRef.current = true;
+      mapInstanceRef.current.panTo([userLocation.lat, userLocation.lng], {
+        animate: true,
+        duration: 0.8,
+      });
+    }
+  }, [userLocation]);
 
   const filteredMosques = mosques.filter((m) => {
     const matchesDistrict =
@@ -286,7 +365,7 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = () => {
 
       markersLayerRef.current?.addLayer(marker);
     });
-  }, [filteredMosques, selectedMosque, userLocation, activeCenterLat, activeCenterLng]);
+  }, [filteredMosques, selectedMosque?.id, userLocation]);
 
   const handleSelectMosque = (mosque: KeralaMosqueRecord) => {
     setSelectedMosque(mosque);
@@ -340,13 +419,19 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = () => {
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="space-y-1.5 max-w-xl">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-[11px] font-serif uppercase tracking-[0.2em] text-[#ea5d47] font-bold">
                 Masajid of Malabar
               </span>
               <span className="text-[10px] font-mono text-[#785e70] bg-[#f5ecdf] px-2 py-0.5 rounded-full">
                 14 Districts
               </span>
+              {locationNotice && (
+                <span className="text-[10px] font-mono text-[#1f9a84] bg-[#edf8f4] border border-[#cbebe1] px-2.5 py-0.5 rounded-full flex items-center gap-1 transition-all">
+                  <RiSparklingLine className="w-3 h-3 text-[#1f9a84]" />
+                  <span>{locationNotice}</span>
+                </span>
+              )}
             </div>
             <h2 className="text-2xl sm:text-3xl font-serif text-[#381230] font-bold tracking-tight">
               Kerala Mosques
@@ -375,13 +460,6 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = () => {
             </button>
           </div>
         </div>
-
-        {locationNotice && (
-          <div className="mt-4 p-3 rounded-2xl border border-[#ede0cf] bg-[#fbf5eb] text-xs font-serif text-[#381230] flex items-center gap-2.5">
-            <RiSparklingLine className="w-4 h-4 text-[#e59523] shrink-0" />
-            <span>{locationNotice}</span>
-          </div>
-        )}
       </div>
 
       {/* Kerala District Filter Pills */}
