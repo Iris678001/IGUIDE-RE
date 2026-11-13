@@ -73,7 +73,7 @@ export const SurahReader: React.FC<SurahReaderProps> = ({
   };
 
   return (
-    <div className="space-y-6 pb-28">
+    <div className="space-y-6 pb-44 sm:pb-32">
       {/* Top Floating Action Bar (From Reference Screen 2: White circular buttons) */}
       <div className="flex items-center justify-between gap-3 pt-2">
         <button

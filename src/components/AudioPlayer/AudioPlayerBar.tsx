@@ -134,8 +134,8 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({
         onEnded={handleAudioEnded}
       />
 
-      {/* Floating Cairo Audio Capsule */}
-      <div className="fixed bottom-20 sm:bottom-4 left-3 right-3 sm:left-auto sm:right-6 sm:w-[480px] z-40 bg-[#fffdf9]/95 backdrop-blur-md border border-[#ede0cf] rounded-2xl sm:rounded-full shadow-2xl transition-all font-serif overflow-hidden">
+      {/* Floating Cairo Audio Capsule - Safely elevated above mobile bottom navigation */}
+      <div className="fixed bottom-[86px] sm:bottom-6 left-3 right-3 sm:left-auto sm:right-6 sm:w-[480px] max-w-md sm:max-w-none mx-auto sm:mx-0 z-50 bg-[#fffdf9]/95 backdrop-blur-xl border border-[#ede0cf] rounded-[22px] sm:rounded-full shadow-[0_16px_40px_rgba(56,18,48,0.18)] transition-all font-serif overflow-hidden">
         {/* Hairline Saffron Amber Scrubber */}
         <div className="w-full relative group h-1.5 bg-[#f6eee3]">
           <input
