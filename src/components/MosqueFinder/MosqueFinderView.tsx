@@ -22,7 +22,6 @@ import {
   RiNavigationLine,
   RiPhoneLine,
   RiSearch2Line,
-  RiSparklingLine,
   RiAncientPavilionLine,
   RiCheckLine,
   RiFullscreenLine,
@@ -46,7 +45,6 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
   const userLocation = propUserLocation ?? internalLocation;
 
   const [isLocating, setIsLocating] = useState(false);
-  const [locationNotice, setLocationNotice] = useState<string | null>(null);
 
   // Synchronously compute initial curated Kerala mosques sorted by center distance
   // This completely prevents layout shift from empty list to filled list
@@ -108,7 +106,6 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
     }
 
     if (!navigator.geolocation) {
-      setLocationNotice('Centered on Kozhikode');
       const fallback: UserLocation = { lat: 11.2588, lng: 75.7804, timestamp: Date.now() };
       setInternalLocation(fallback);
       void loadMosques(fallback.lat, fallback.lng, radiusKm);
@@ -131,7 +128,6 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
           timestamp: pos.timestamp,
         };
         setInternalLocation(loc);
-        setLocationNotice(insideKerala ? 'Live GPS acquired' : 'Centered on Kozhikode');
 
         if (mapInstanceRef.current) {
           mapInstanceRef.current.flyTo([targetLat, targetLng], 13, { duration: 1 });
@@ -143,7 +139,6 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
         console.warn('Geolocation failed:', err.message);
         const fallback: UserLocation = { lat: 11.2588, lng: 75.7804, timestamp: Date.now() };
         setInternalLocation(fallback);
-        setLocationNotice('Showing Kerala Masajid');
         void loadMosques(fallback.lat, fallback.lng, radiusKm);
         setIsLocating(false);
       },
@@ -419,19 +414,13 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="space-y-1.5 max-w-xl">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2">
               <span className="text-[11px] font-serif uppercase tracking-[0.2em] text-[#ea5d47] font-bold">
                 Masajid of Malabar
               </span>
               <span className="text-[10px] font-mono text-[#785e70] bg-[#f5ecdf] px-2 py-0.5 rounded-full">
                 14 Districts
               </span>
-              {locationNotice && (
-                <span className="text-[10px] font-mono text-[#1f9a84] bg-[#edf8f4] border border-[#cbebe1] px-2.5 py-0.5 rounded-full flex items-center gap-1 transition-all">
-                  <RiSparklingLine className="w-3 h-3 text-[#1f9a84]" />
-                  <span>{locationNotice}</span>
-                </span>
-              )}
             </div>
             <h2 className="text-2xl sm:text-3xl font-serif text-[#381230] font-bold tracking-tight">
               Kerala Mosques
