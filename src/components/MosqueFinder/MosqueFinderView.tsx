@@ -328,10 +328,10 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = () => {
     <div className="space-y-6">
       {/* Cairo-Style Floating Feature Card ("Explore Kerala Mosques") */}
       <div className="rounded-[32px] bg-[#fffdf9] border border-[#ede0cf] p-6 sm:p-8 shadow-[0_16px_40px_rgba(56,18,48,0.06)] relative overflow-hidden group">
-        {/* 4K Background Texture: Historic Malabar Kerala wooden mosque at sunset with serene water pond */}
+        {/* 4K Background Texture: Breathtaking Grand Islamic Mosque at sunset */}
         <img
           src="/images/mosques_header.jpg"
-          alt="Kerala Heritage Mosque"
+          alt="Grand Islamic Mosque"
           className="absolute inset-0 w-full h-full object-cover object-[center_35%] opacity-75 pointer-events-none transition-transform duration-700 group-hover:scale-105"
         />
         {/* Soft Sunset Translucent Overlay - Reduced for High Image Visibility */}
