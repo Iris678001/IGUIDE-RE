@@ -44,6 +44,11 @@
 
   button, input, select, textarea {
     font-family: inherit;
+    touch-action: manipulation;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
