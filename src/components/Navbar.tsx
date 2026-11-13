@@ -26,7 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigateTab }) => {
               </span>
             </div>
             <p className="text-[11px] tracking-wider text-[#785e70] font-serif italic hidden sm:block">
-              Holy Quran • Kerala Mosques • Sacred Qibla
+              Holy Qur'an &amp; Hadith • Kerala Mosques • Sacred Qibla
             </p>
           </div>
         </div>
@@ -42,7 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigateTab }) => {
             }`}
           >
             <RiBookOpenLine className="w-3.5 h-3.5 text-[#e59523]" />
-            <span>Holy Quran</span>
+            <span>Qur'an &amp; Hadith</span>
           </button>
           <button
             onClick={() => onNavigateTab('mosques')}

@@ -22,11 +22,13 @@ import { AudioPlayerBar } from './components/AudioPlayer/AudioPlayerBar';
 import { MosqueFinderView } from './components/MosqueFinder/MosqueFinderView';
 import { QiblaCompassView } from './components/Qibla/QiblaCompassView';
 import { OfflineManagerView } from './components/OfflineManager/OfflineManagerView';
-import { RiLoader4Line } from 'react-icons/ri';
+import { HadithCollectionView } from './components/Hadith/HadithCollectionView';
+import { RiLoader4Line, RiBookLine, RiBookOpenLine } from 'react-icons/ri';
 
 export default function App() {
   const isOnline = useOnlineStatus();
   const [activeTab, setActiveTab] = useState<'quran' | 'mosques' | 'qibla' | 'offline'>('quran');
+  const [scriptureSubTab, setScriptureSubTab] = useState<'quran' | 'bukhari' | 'muslim'>('quran');
   
   // Quran reader state
   const [selectedSurahNumber, setSelectedSurahNumber] = useState<number | null>(null);
@@ -254,50 +256,104 @@ export default function App() {
       <Navbar activeTab={activeTab} onNavigateTab={setActiveTab} />
 
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
-        {/* TAB: QURAN */}
+        {/* TAB: QURAN & HADITH */}
         {activeTab === 'quran' && (
-          <>
-            {isLoadingSurah ? (
-              <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3">
-                <RiLoader4Line className="w-8 h-8 text-[#e59523] animate-spin" />
-                <p className="text-xs uppercase tracking-widest text-[#785e70] font-sans font-semibold">Opening Holy Manuscript...</p>
-              </div>
-            ) : surahError ? (
-              <div className="p-8 rounded-[32px] border border-[#f4c898] bg-[#fffdf9] text-center max-w-md mx-auto my-12 shadow-xl">
-                <p className="text-[#a64e1e] font-serif mb-4 text-sm">{surahError}</p>
+          <div className="space-y-6">
+            {/* Elegant Cairo Scripture & Hadith Switcher */}
+            <div className="flex items-center justify-center">
+              <div className="inline-flex p-1 rounded-full bg-[#f3e9db] border border-[#e8d7c1] shadow-inner max-w-full overflow-x-auto">
                 <button
-                  onClick={() => selectedSurahNumber && loadSurah(selectedSurahNumber)}
-                  className="px-6 py-2.5 rounded-full bg-gradient-to-br from-[#e59523] to-[#d87c10] text-white text-xs font-serif uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer font-bold"
+                  onClick={() => setScriptureSubTab('quran')}
+                  className={`flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-serif font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                    scriptureSubTab === 'quran'
+                      ? 'bg-white text-[#381230] shadow-sm'
+                      : 'text-[#785e70] hover:text-[#381230]'
+                  }`}
                 >
-                  Retry Reading
+                  <RiBookOpenLine className="w-3.5 h-3.5 text-[#e59523]" />
+                  <span>Holy Qur'an</span>
+                </button>
+                <button
+                  onClick={() => setScriptureSubTab('bukhari')}
+                  className={`flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-serif font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                    scriptureSubTab === 'bukhari'
+                      ? 'bg-white text-[#381230] shadow-sm'
+                      : 'text-[#785e70] hover:text-[#381230]'
+                  }`}
+                >
+                  <RiBookLine className="w-3.5 h-3.5 text-[#e59523]" />
+                  <span>Sahih al-Bukhari</span>
+                </button>
+                <button
+                  onClick={() => setScriptureSubTab('muslim')}
+                  className={`flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-serif font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                    scriptureSubTab === 'muslim'
+                      ? 'bg-white text-[#381230] shadow-sm'
+                      : 'text-[#785e70] hover:text-[#381230]'
+                  }`}
+                >
+                  <RiBookLine className="w-3.5 h-3.5 text-[#8c67c5]" />
+                  <span>Sahih Muslim</span>
                 </button>
               </div>
-            ) : currentSurah ? (
-              <SurahReader
-                surah={currentSurah}
-                onBack={handleBackToSurahList}
-                onSelectSurah={handleSelectSurah}
-                currentPlayingAyah={currentPlayingAyah}
-                isPlayingAudio={isPlayingAudio}
-                onPlayAyah={handlePlayAyah}
-                onPauseAudio={handlePauseAudio}
-                selectedReciter={selectedReciter}
-                onSelectReciter={handleSelectReciter}
-                onToggleBookmark={handleToggleBookmark}
-                isAyahBookmarked={isAyahBookmarked}
-                onSaveOffline={handleSaveOffline}
-                isSavedOffline={downloadedSurahs.includes(currentSurah.number)}
-              />
-            ) : (
-              <SurahList
-                onSelectSurah={handleSelectSurah}
-                downloadedSurahNumbers={downloadedSurahs}
-                lastReadSurah={lastReadSurah}
-                onDownloadAllOffline={handleDownloadAll}
-                isDownloadingAll={isDownloadingAll}
-              />
+            </div>
+
+            {/* Sub-view: Quran */}
+            {scriptureSubTab === 'quran' && (
+              <>
+                {isLoadingSurah ? (
+                  <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3">
+                    <RiLoader4Line className="w-8 h-8 text-[#e59523] animate-spin" />
+                    <p className="text-xs uppercase tracking-widest text-[#785e70] font-sans font-semibold">Opening Holy Manuscript...</p>
+                  </div>
+                ) : surahError ? (
+                  <div className="p-8 rounded-[32px] border border-[#f4c898] bg-[#fffdf9] text-center max-w-md mx-auto my-12 shadow-xl">
+                    <p className="text-[#a64e1e] font-serif mb-4 text-sm">{surahError}</p>
+                    <button
+                      onClick={() => selectedSurahNumber && loadSurah(selectedSurahNumber)}
+                      className="px-6 py-2.5 rounded-full bg-gradient-to-br from-[#e59523] to-[#d87c10] text-white text-xs font-serif uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer font-bold"
+                    >
+                      Retry Reading
+                    </button>
+                  </div>
+                ) : currentSurah ? (
+                  <SurahReader
+                    surah={currentSurah}
+                    onBack={handleBackToSurahList}
+                    onSelectSurah={handleSelectSurah}
+                    currentPlayingAyah={currentPlayingAyah}
+                    isPlayingAudio={isPlayingAudio}
+                    onPlayAyah={handlePlayAyah}
+                    onPauseAudio={handlePauseAudio}
+                    selectedReciter={selectedReciter}
+                    onSelectReciter={handleSelectReciter}
+                    onToggleBookmark={handleToggleBookmark}
+                    isAyahBookmarked={isAyahBookmarked}
+                    onSaveOffline={handleSaveOffline}
+                    isSavedOffline={downloadedSurahs.includes(currentSurah.number)}
+                  />
+                ) : (
+                  <SurahList
+                    onSelectSurah={handleSelectSurah}
+                    downloadedSurahNumbers={downloadedSurahs}
+                    lastReadSurah={lastReadSurah}
+                    onDownloadAllOffline={handleDownloadAll}
+                    isDownloadingAll={isDownloadingAll}
+                  />
+                )}
+              </>
             )}
-          </>
+
+            {/* Sub-view: Sahih al-Bukhari */}
+            {scriptureSubTab === 'bukhari' && (
+              <HadithCollectionView collection="bukhari" />
+            )}
+
+            {/* Sub-view: Sahih Muslim */}
+            {scriptureSubTab === 'muslim' && (
+              <HadithCollectionView collection="muslim" />
+            )}
+          </div>
         )}
 
         {/* TAB: MOSQUES */}
