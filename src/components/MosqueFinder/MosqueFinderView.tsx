@@ -14,6 +14,7 @@ import {
   formatDistance,
   generateNavigationUrl,
 } from '../../utils/distance';
+import { getCachedUserLocation, setCachedUserLocation } from '../../utils/locationCache';
 import {
   RiCompass3Line,
   RiExternalLinkLine,
@@ -41,7 +42,8 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
   onRequestLocation: propOnRequestLocation,
   isActive = true,
 }) => {
-  const [internalLocation, setInternalLocation] = useState<UserLocation | null>(null);
+  // Initialize location strictly from cache first to avoid re-checking GPS
+  const [internalLocation, setInternalLocation] = useState<UserLocation | null>(() => getCachedUserLocation());
   const userLocation = propUserLocation ?? internalLocation;
 
   const [isLocating, setIsLocating] = useState(false);
@@ -77,7 +79,7 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
   const tileLayerRef = useRef<L.TileLayer | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const userMarkerRef = useRef<L.Marker | null>(null);
-  const hasInitiallyCenteredRef = useRef(false);
+  const hasInitiallyCenteredRef = useRef(Boolean(userLocation));
 
   const activeCenterLat = userLocation?.lat ?? 11.2588;
   const activeCenterLng = userLocation?.lng ?? 75.7804;
@@ -98,6 +100,7 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
     [selectedMosque]
   );
 
+  // Manual locate callback - ONLY called when button is explicitly prompted by the user
   const requestCurrentLocation = useCallback(() => {
     setIsLocating(true);
 
@@ -108,6 +111,7 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
     if (!navigator.geolocation) {
       const fallback: UserLocation = { lat: 11.2588, lng: 75.7804, timestamp: Date.now() };
       setInternalLocation(fallback);
+      setCachedUserLocation(fallback);
       void loadMosques(fallback.lat, fallback.lng, radiusKm);
       setIsLocating(false);
       return;
@@ -128,6 +132,7 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
           timestamp: pos.timestamp,
         };
         setInternalLocation(loc);
+        setCachedUserLocation(loc); // Persist directly to cache
 
         if (mapInstanceRef.current) {
           mapInstanceRef.current.flyTo([targetLat, targetLng], 13, { duration: 1 });
@@ -139,6 +144,7 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
         console.warn('Geolocation failed:', err.message);
         const fallback: UserLocation = { lat: 11.2588, lng: 75.7804, timestamp: Date.now() };
         setInternalLocation(fallback);
+        setCachedUserLocation(fallback);
         void loadMosques(fallback.lat, fallback.lng, radiusKm);
         setIsLocating(false);
       },
@@ -146,9 +152,9 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = ({
     );
   }, [loadMosques, radiusKm, propOnRequestLocation]);
 
-  // Request location only if user location is not yet known
+  // NEVER automatically recheck GPS if location is already in cache
   useEffect(() => {
-    if (!userLocation && !hasInitiallyCenteredRef.current) {
+    if (!userLocation && !getCachedUserLocation() && !hasInitiallyCenteredRef.current) {
       requestCurrentLocation();
     }
   }, []);

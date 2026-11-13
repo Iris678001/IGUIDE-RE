@@ -11,6 +11,7 @@ import {
   saveOfflineSurah,
 } from './utils/offlineStorage';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
+import { getCachedUserLocation, setCachedUserLocation } from './utils/locationCache';
 
 import { Navbar } from './components/Navbar';
 import { BottomNav } from './components/BottomNav';
@@ -54,20 +55,25 @@ export default function App() {
   const [isDownloadingAll, setIsDownloadingAll] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState({ current: 0, total: SURAH_LIST.length });
 
-  // Geolocation state for Qibla & Mosques
-  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+  // Geolocation state for Qibla & Mosques - loaded from persistent cache
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(() => getCachedUserLocation());
 
-  // Request user location
-  const requestUserLocation = useCallback(() => {
+  // Request user location (manual button prompt or first-time setup only)
+  const requestUserLocation = useCallback((force = false) => {
+    // If not explicitly forced by button prompt and cache exists, do not re-query
+    if (!force && getCachedUserLocation()) return;
+
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setUserLocation({
+        const loc: UserLocation = {
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
           accuracyMeters: pos.coords.accuracy,
           timestamp: pos.timestamp || Date.now(),
-        });
+        };
+        setUserLocation(loc);
+        setCachedUserLocation(loc);
       },
       (err) => {
         console.warn('Geolocation error:', err.message);
@@ -76,11 +82,14 @@ export default function App() {
     );
   }, []);
 
-  // Initial load: offline surahs, bookmarks, geolocation
+  // Initial load: offline surahs, bookmarks, geolocation ONLY if not in cache
   useEffect(() => {
     void getAllOfflineSurahNumbers().then(setDownloadedSurahs);
     void getBookmarks().then(setBookmarks);
-    requestUserLocation();
+
+    if (!getCachedUserLocation()) {
+      requestUserLocation(false);
+    }
   }, [requestUserLocation]);
 
   // Load a surah
@@ -295,7 +304,7 @@ export default function App() {
         <div className={activeTab === 'mosques' ? 'space-y-4' : 'hidden'}>
           <MosqueFinderView
             userLocation={userLocation}
-            onRequestLocation={requestUserLocation}
+            onRequestLocation={() => requestUserLocation(true)}
             isActive={activeTab === 'mosques'}
           />
         </div>
@@ -305,7 +314,7 @@ export default function App() {
           <div className="max-w-2xl mx-auto py-4">
             <QiblaCompassView
               userLocation={userLocation}
-              onRequestLocation={requestUserLocation}
+              onRequestLocation={() => requestUserLocation(true)}
             />
           </div>
         )}
