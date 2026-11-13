@@ -44,11 +44,11 @@ export const OfflineManagerView: React.FC<OfflineManagerViewProps> = ({
         <img
           src="/images/saved_header.jpg"
           alt="Sacred Heritage Library"
-          className="absolute inset-0 w-full h-full object-cover object-[center_35%] opacity-30 mix-blend-multiply pointer-events-none transition-transform duration-700 group-hover:scale-105"
+          className="absolute inset-0 w-full h-full object-cover object-[center_35%] opacity-75 pointer-events-none transition-transform duration-700 group-hover:scale-105"
         />
-        {/* Soft Sunset Radial Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#fffdf9] via-[#fffdf9]/85 to-[#fffdf9]/60 pointer-events-none" />
-        <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br from-[#1f9a84]/20 via-[#fcd485]/15 to-transparent pointer-events-none blur-2xl" />
+        {/* Soft Sunset Translucent Overlay - Reduced for High Image Visibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fffdf9]/85 via-[#fffdf9]/50 to-transparent pointer-events-none" />
+        <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br from-[#1f9a84]/20 via-[#fcd485]/10 to-transparent pointer-events-none blur-2xl" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="flex items-start gap-4">

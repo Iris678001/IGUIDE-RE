@@ -64,11 +64,11 @@ export const SurahList: React.FC<SurahListProps> = ({
         <img
           src="/images/quran_header.jpg"
           alt="Illuminated Holy Qur'an Manuscript"
-          className="absolute inset-0 w-full h-full object-cover object-[center_35%] opacity-35 mix-blend-multiply pointer-events-none transition-transform duration-700 group-hover:scale-105"
+          className="absolute inset-0 w-full h-full object-cover object-[center_35%] opacity-75 pointer-events-none transition-transform duration-700 group-hover:scale-105"
         />
-        {/* Soft Sunset Radial Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#fffdf9] via-[#fffdf9]/85 to-[#fffdf9]/60 pointer-events-none" />
-        <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br from-[#fcd485]/30 via-[#f8b475]/20 to-transparent pointer-events-none blur-2xl" />
+        {/* Soft Sunset Translucent Overlay - Reduced for High Image Visibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fffdf9]/85 via-[#fffdf9]/50 to-transparent pointer-events-none" />
+        <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br from-[#fcd485]/20 via-[#f8b475]/10 to-transparent pointer-events-none blur-2xl" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="flex items-start gap-4">

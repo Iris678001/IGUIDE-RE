@@ -412,11 +412,11 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
         <img
           src="/images/qibla_header.jpg"
           alt="Celestial Qibla Astrolabe"
-          className="absolute inset-0 w-full h-full object-cover object-[center_20%] opacity-25 mix-blend-multiply pointer-events-none transition-transform duration-700 group-hover:scale-105"
+          className="absolute inset-0 w-full h-full object-cover object-[center_20%] opacity-65 pointer-events-none transition-transform duration-700 group-hover:scale-105"
         />
-        {/* Soft Sunset Radial Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#fffdf9]/75 via-[#fffdf9]/95 to-[#fffdf9] pointer-events-none" />
-        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-96 h-40 bg-gradient-to-b from-[#fcd485]/30 via-[#f8b475]/15 to-transparent pointer-events-none blur-2xl" />
+        {/* Soft Sunset Translucent Overlay - Reduced for High Image Visibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#fffdf9]/70 via-[#fffdf9]/40 to-[#fffdf9]/85 pointer-events-none" />
+        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-96 h-40 bg-gradient-to-b from-[#fcd485]/20 via-[#f8b475]/10 to-transparent pointer-events-none blur-2xl" />
 
         {/* Header */}
         <div className="space-y-1.5 mb-5 relative z-10">
