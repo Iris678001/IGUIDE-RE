@@ -22,8 +22,6 @@ export const SurahList: React.FC<SurahListProps> = ({
   onSelectSurah,
   downloadedSurahNumbers,
   lastReadSurah,
-  onDownloadAllOffline,
-  isDownloadingAll,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'Meccan' | 'Medinan'>('all');
@@ -85,26 +83,6 @@ export const SurahList: React.FC<SurahListProps> = ({
               Uthmani script with authentic translations, Tafsir, and complete offline voice recitation.
             </p>
           </div>
-
-          {/* Quick Offline Action Button */}
-          {onDownloadAllOffline && (
-            <div className="shrink-0 flex items-center">
-              <button
-                onClick={onDownloadAllOffline}
-                disabled={isDownloadingAll}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-[#e59523] to-[#d4811a] hover:from-[#f0a22a] hover:to-[#e59523] text-white font-serif text-xs font-bold uppercase tracking-wider shadow-md shadow-[#e59523]/25 transition-all cursor-pointer disabled:opacity-50"
-              >
-                <RiDownloadLine className="w-3.5 h-3.5" />
-                <span>
-                  {isDownloadingAll
-                    ? 'Saving Surahs...'
-                    : downloadedSurahNumbers.length >= 114
-                    ? 'All 114 Surahs Saved'
-                    : 'Download Offline'}
-                </span>
-              </button>
-            </div>
-          )}
         </div>
       </div>
 
