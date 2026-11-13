@@ -81,6 +81,8 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
   const lastCompassAngleRef = useRef<number>(0);
   const lastNeedleAngleRef = useRef<number>(0);
   const lastVibrateRef = useRef<number>(0);
+  const listenersAttachedRef = useRef<boolean>(false);
+  const activeListenerTypeRef = useRef<'absolute' | 'standard' | null>(null);
 
   const currentLat = userLocation?.lat ?? 10.8505;
   const currentLng = userLocation?.lng ?? 76.2711;
@@ -170,22 +172,105 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
     }
   }, [isAligned, hapticEnabled]);
 
-  const handleOrientation = useCallback((e: DeviceOrientationEvent) => {
-    const webkitHeading = (e as unknown as { webkitCompassHeading?: number }).webkitCompassHeading;
-    if (typeof webkitHeading === 'number' && !isNaN(webkitHeading)) {
-      setDeviceHeading(Math.round(webkitHeading));
-      setSensorActive(true);
-      setSensorState('granted');
+  const computeHandheldHeading = useCallback(
+    (alpha: number | null, beta: number | null, gamma: number | null): number | null => {
+      if (alpha === null || isNaN(alpha)) return null;
+
+      const b = beta ?? 0;
+      const g = gamma ?? 0;
+
+      const rad = Math.PI / 180;
+      const deg = 180 / Math.PI;
+
+      const _a = alpha * rad;
+      const _b = b * rad;
+      const _g = g * rad;
+
+      const cA = Math.cos(_a);
+      const sA = Math.sin(_a);
+      const cB = Math.cos(_b);
+      const sB = Math.sin(_b);
+      const cG = Math.cos(_g);
+      const sG = Math.sin(_g);
+
+      // 3D vector projection of phone forward direction onto Earth horizontal plane (East, North)
+      // incorporating handheld pitch (beta) and roll (gamma) cross-terms:
+      const vEast = -sA * cB - cA * sG * sB;
+      const vNorth = cA * cB - sA * sG * sB;
+
+      let heading = Math.atan2(-vEast, vNorth) * deg;
+
+      // Screen orientation compensation (portrait = 0, landscape = 90 or 270)
+      let screenAngle = 0;
+      if (typeof window !== 'undefined') {
+        const screenOrient = window.screen?.orientation;
+        if (typeof screenOrient?.angle === 'number') {
+          screenAngle = screenOrient.angle;
+        } else if (typeof (window as unknown as { orientation?: number }).orientation === 'number') {
+          screenAngle = Number((window as unknown as { orientation?: number }).orientation) || 0;
+        }
+      }
+
+      let finalHeading = (heading + screenAngle) % 360;
+      if (finalHeading < 0) finalHeading += 360;
+      return finalHeading;
+    },
+    []
+  );
+
+  const handleOrientation = useCallback(
+    (e: DeviceOrientationEvent) => {
+      // 1. iOS Safari (WebKit provides hardware-calibrated, CoreMotion-compensated compass heading)
+      const webkitHeading = (e as unknown as { webkitCompassHeading?: number }).webkitCompassHeading;
+      if (typeof webkitHeading === 'number' && !isNaN(webkitHeading) && webkitHeading >= 0) {
+        setDeviceHeading(Math.round((webkitHeading % 360 + 360) % 360));
+        setSensorActive(true);
+        setSensorState('granted');
+        return;
+      }
+
+      // 2. Reject non-absolute relative events on Android when absolute orientation is expected
+      if (e.absolute === false && activeListenerTypeRef.current === 'absolute') {
+        return;
+      }
+
+      // 3. Android Absolute Orientation / Standard W3C Device Orientation
+      const heading = computeHandheldHeading(e.alpha, e.beta, e.gamma);
+      if (heading !== null) {
+        setDeviceHeading(Math.round(heading));
+        setSensorActive(true);
+        setSensorState('granted');
+      }
+    },
+    [computeHandheldHeading]
+  );
+
+  const detachListeners = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    (window as any).removeEventListener('deviceorientationabsolute', handleOrientation as EventListener, true);
+    (window as any).removeEventListener('deviceorientation', handleOrientation as EventListener, true);
+    listenersAttachedRef.current = false;
+    activeListenerTypeRef.current = null;
+  }, [handleOrientation]);
+
+  const attachListeners = useCallback(() => {
+    if (typeof window === 'undefined' || listenersAttachedRef.current) return;
+
+    // Check if absolute device orientation is supported (Android Chrome 50+)
+    if ('ondeviceorientationabsolute' in window) {
+      (window as any).addEventListener('deviceorientationabsolute', handleOrientation as EventListener, true);
+      listenersAttachedRef.current = true;
+      activeListenerTypeRef.current = 'absolute';
       return;
     }
 
-    if (e.alpha !== null && !isNaN(e.alpha)) {
-      const heading = (360 - e.alpha) % 360;
-      setDeviceHeading(Math.round(heading));
-      setSensorActive(true);
-      setSensorState('granted');
+    // iOS Safari or browsers without deviceorientationabsolute
+    if ('DeviceOrientationEvent' in window) {
+      (window as any).addEventListener('deviceorientation', handleOrientation as EventListener, true);
+      listenersAttachedRef.current = true;
+      activeListenerTypeRef.current = 'standard';
     }
-  }, []);
+  }, [handleOrientation]);
 
   const requestSensorPermission = async () => {
     const DeviceOrientation = window.DeviceOrientationEvent as unknown as {
@@ -197,7 +282,10 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
         const response = await DeviceOrientation.requestPermission();
         if (response === 'granted') {
           setSensorState('granted');
+          detachListeners();
           window.addEventListener('deviceorientation', handleOrientation, true);
+          listenersAttachedRef.current = true;
+          activeListenerTypeRef.current = 'standard';
         } else {
           setSensorState('denied');
         }
@@ -205,20 +293,10 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
         setSensorState('denied');
       }
     } else {
+      detachListeners();
       attachListeners();
     }
   };
-
-  const attachListeners = useCallback(() => {
-    if (typeof window === 'undefined') return;
-
-    if ('ondeviceorientationabsolute' in window) {
-      window.addEventListener('deviceorientationabsolute', handleOrientation as EventListener, true);
-    }
-    if ('DeviceOrientationEvent' in window) {
-      window.addEventListener('deviceorientation', handleOrientation, true);
-    }
-  }, [handleOrientation]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -229,24 +307,26 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
 
     if (typeof DeviceOrientation?.requestPermission === 'function') {
       setSensorState('prompt');
-    } else if ('DeviceOrientationEvent' in window) {
+    } else if ('ondeviceorientationabsolute' in window || 'DeviceOrientationEvent' in window) {
       attachListeners();
       const timeout = setTimeout(() => {
         setSensorActive((active) => {
           if (!active) setSensorState('unsupported');
           return active;
         });
-      }, 1500);
-      return () => clearTimeout(timeout);
+      }, 2500);
+      return () => {
+        clearTimeout(timeout);
+        detachListeners();
+      };
     } else {
       setSensorState('unsupported');
     }
 
     return () => {
-      window.removeEventListener('deviceorientationabsolute', handleOrientation as EventListener, true);
-      window.removeEventListener('deviceorientation', handleOrientation, true);
+      detachListeners();
     };
-  }, [attachListeners, handleOrientation]);
+  }, [attachListeners, detachListeners]);
 
   useEffect(() => {
     if (!showMap || !mapContainerRef.current) return;
