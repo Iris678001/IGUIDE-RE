@@ -51,34 +51,27 @@ export const OfflineManagerView: React.FC<OfflineManagerViewProps> = ({
         <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br from-[#1f9a84]/20 via-[#fcd485]/10 to-transparent pointer-events-none blur-2xl" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-          <div className="flex items-start gap-4">
-            {/* Raised Turquoise Oasis Squircle Icon Badge */}
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[22px] bg-gradient-to-tr from-[#1f9a84] to-[#34b69d] shadow-lg shadow-[#1f9a84]/30 flex items-center justify-center shrink-0 text-white">
-              <RiBookmark3Fill className="w-7 h-7" />
+          <div className="space-y-1.5 max-w-xl">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-serif uppercase tracking-[0.2em] text-[#1f9a84] font-bold">
+                Personal Library
+              </span>
+              <span
+                className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full border ${
+                  isOnline
+                    ? 'border-[#cbebe1] bg-[#edf8f4] text-[#1f9a84] font-bold'
+                    : 'border-[#edd7b6] bg-[#fbf5eb] text-[#e59523] font-bold'
+                }`}
+              >
+                {isOnline ? 'Online' : 'Offline Mode'}
+              </span>
             </div>
-
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-serif uppercase tracking-[0.2em] text-[#1f9a84] font-bold">
-                  Personal Library
-                </span>
-                <span
-                  className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full border ${
-                    isOnline
-                      ? 'border-[#cbebe1] bg-[#edf8f4] text-[#1f9a84] font-bold'
-                      : 'border-[#edd7b6] bg-[#fbf5eb] text-[#e59523] font-bold'
-                  }`}
-                >
-                  {isOnline ? 'Online' : 'Offline Mode'}
-                </span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-serif text-[#381230] font-bold tracking-tight">
-                Saved Surahs &amp; Bookmarks
-              </h1>
-              <p className="text-xs sm:text-sm font-serif italic text-[#785e70] max-w-lg leading-relaxed">
-                Read and listen to the Holy Qur'an anytime without needing internet or mobile data. Your saved Surahs and bookmarked verses stay safely on your device.
-              </p>
-            </div>
+            <h1 className="text-2xl sm:text-3xl font-serif text-[#381230] font-bold tracking-tight">
+              Saved Surahs &amp; Bookmarks
+            </h1>
+            <p className="text-xs sm:text-sm font-serif italic text-[#785e70] leading-relaxed">
+              Read and listen to the Holy Qur'an anytime without needing internet or mobile data. Your saved Surahs and bookmarked verses stay safely on your device.
+            </p>
           </div>
 
           {/* Quick One-Tap Download All Button */}

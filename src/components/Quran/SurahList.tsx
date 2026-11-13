@@ -69,28 +69,21 @@ export const SurahList: React.FC<SurahListProps> = ({
         <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br from-[#fcd485]/20 via-[#f8b475]/10 to-transparent pointer-events-none blur-2xl" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-          <div className="flex items-start gap-4">
-            {/* Raised Saffron Squircle Icon Badge (from reference image) */}
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[22px] bg-gradient-to-tr from-[#e59523] to-[#f5b247] shadow-lg shadow-[#e59523]/30 flex items-center justify-center shrink-0 text-white">
-              <RiBookOpenLine className="w-7 h-7" />
+          <div className="space-y-1.5 max-w-xl">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-serif uppercase tracking-[0.2em] text-[#e59523] font-bold">
+                Sacred Scripture
+              </span>
+              <span className="text-[10px] font-mono text-[#785e70] bg-[#f5ecdf] px-2 py-0.5 rounded-full">
+                114 Surahs
+              </span>
             </div>
-
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-serif uppercase tracking-[0.2em] text-[#e59523] font-bold">
-                  Sacred Scripture
-                </span>
-                <span className="text-[10px] font-mono text-[#785e70] bg-[#f5ecdf] px-2 py-0.5 rounded-full">
-                  114 Surahs
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-serif text-[#381230] font-bold tracking-tight">
-                The Holy Qur'an
-              </h2>
-              <p className="text-xs sm:text-sm font-serif italic text-[#785e70] max-w-lg leading-relaxed">
-                Uthmani script with authentic translations, Tafsir, and complete offline voice recitation.
-              </p>
-            </div>
+            <h2 className="text-2xl sm:text-3xl font-serif text-[#381230] font-bold tracking-tight">
+              The Holy Qur'an
+            </h2>
+            <p className="text-xs sm:text-sm font-serif italic text-[#785e70] leading-relaxed">
+              Uthmani script with authentic translations, Tafsir, and complete offline voice recitation.
+            </p>
           </div>
 
           {/* Quick Offline Action Button */}

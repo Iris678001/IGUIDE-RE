@@ -339,28 +339,21 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = () => {
         <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br from-[#ea5d47]/20 via-[#fcd485]/10 to-transparent pointer-events-none blur-2xl" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-          <div className="flex items-start gap-4">
-            {/* Raised Terracotta Squircle Icon Badge */}
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[22px] bg-gradient-to-tr from-[#ea5d47] to-[#f28672] shadow-lg shadow-[#ea5d47]/30 flex items-center justify-center shrink-0 text-white">
-              <RiAncientPavilionLine className="w-7 h-7" />
+          <div className="space-y-1.5 max-w-xl">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-serif uppercase tracking-[0.2em] text-[#ea5d47] font-bold">
+                Masajid of Malabar
+              </span>
+              <span className="text-[10px] font-mono text-[#785e70] bg-[#f5ecdf] px-2 py-0.5 rounded-full">
+                14 Districts
+              </span>
             </div>
-
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-serif uppercase tracking-[0.2em] text-[#ea5d47] font-bold">
-                  Masajid of Malabar
-                </span>
-                <span className="text-[10px] font-mono text-[#785e70] bg-[#f5ecdf] px-2 py-0.5 rounded-full">
-                  14 Districts
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-serif text-[#381230] font-bold tracking-tight">
-                Kerala Mosques
-              </h2>
-              <p className="text-xs sm:text-sm font-serif italic text-[#785e70] max-w-lg leading-relaxed">
-                Historic Juma Masjids and Mahallu Masajid with live turn-by-turn navigation and Qibla orientation.
-              </p>
-            </div>
+            <h2 className="text-2xl sm:text-3xl font-serif text-[#381230] font-bold tracking-tight">
+              Kerala Mosques
+            </h2>
+            <p className="text-xs sm:text-sm font-serif italic text-[#785e70] leading-relaxed">
+              Historic Juma Masjids and Mahallu Masajid with live turn-by-turn navigation and Qibla orientation.
+            </p>
           </div>
 
           <div className="shrink-0 flex items-center gap-2.5">
