@@ -5,6 +5,7 @@ import {
   RiCompass3Line,
   RiAncientPavilionLine,
 } from 'react-icons/ri';
+import { triggerQiblaSensorPermission } from '../utils/sensorPermission';
 
 interface BottomNavProps {
   activeTab: 'quran' | 'mosques' | 'qibla' | 'offline';
@@ -60,6 +61,9 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       } catch {
         // Haptics not allowed
       }
+    }
+    if (tabId === 'qibla') {
+      void triggerQiblaSensorPermission();
     }
     onNavigateTab(tabId);
   };

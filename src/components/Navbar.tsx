@@ -1,5 +1,6 @@
 import React from 'react';
 import { RiCompass3Line, RiBookOpenLine, RiMapPin2Line, RiBookmark3Line } from 'react-icons/ri';
+import { triggerQiblaSensorPermission } from '../utils/sensorPermission';
 
 interface NavbarProps {
   activeTab: 'quran' | 'mosques' | 'qibla' | 'offline';
@@ -55,7 +56,10 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigateTab }) => {
             <span>Kerala Mosques</span>
           </button>
           <button
-            onClick={() => onNavigateTab('qibla')}
+            onClick={() => {
+              void triggerQiblaSensorPermission();
+              onNavigateTab('qibla');
+            }}
             className={`flex items-center gap-1.5 px-4 py-1.5 text-xs tracking-wider uppercase font-serif rounded-full transition-all cursor-pointer ${
               activeTab === 'qibla'
                 ? 'bg-white text-[#381230] font-bold shadow-sm'

@@ -301,32 +301,51 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    // Immediately attach orientation listeners
+    attachListeners();
+
+    // Query sensors permissions on Chromium/Android
+    if (navigator.permissions && (navigator.permissions as any).query) {
+      try {
+        ['accelerometer', 'gyroscope', 'magnetometer'].forEach((name) => {
+          (navigator.permissions as any).query({ name }).catch(() => {});
+        });
+      } catch {}
+    }
+
     const DeviceOrientation = window.DeviceOrientationEvent as unknown as {
       requestPermission?: () => Promise<'granted' | 'denied'>;
     };
 
     if (typeof DeviceOrientation?.requestPermission === 'function') {
-      setSensorState('prompt');
-    } else if ('ondeviceorientationabsolute' in window || 'DeviceOrientationEvent' in window) {
-      attachListeners();
-      const timeout = setTimeout(() => {
-        setSensorActive((active) => {
-          if (!active) setSensorState('unsupported');
-          return active;
+      DeviceOrientation.requestPermission()
+        .then((res) => {
+          if (res === 'granted') {
+            setSensorState('granted');
+            detachListeners();
+            window.addEventListener('deviceorientation', handleOrientation as EventListener, true);
+            listenersAttachedRef.current = true;
+            activeListenerTypeRef.current = 'standard';
+          } else {
+            setSensorState('prompt');
+          }
+        })
+        .catch(() => {
+          setSensorState('prompt');
         });
-      }, 2500);
-      return () => {
-        clearTimeout(timeout);
-        detachListeners();
-      };
-    } else {
-      setSensorState('unsupported');
     }
 
+    const timeout = setTimeout(() => {
+      setSensorActive((active) => {
+        return active;
+      });
+    }, 2500);
+
     return () => {
+      clearTimeout(timeout);
       detachListeners();
     };
-  }, [attachListeners, detachListeners]);
+  }, [attachListeners, detachListeners, handleOrientation]);
 
   useEffect(() => {
     if (!showMap || !mapContainerRef.current) return;
@@ -406,37 +425,57 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto font-serif">
-      {/* Cairo-Style Astrolabe Qibla Compass Card */}
-      <div className="rounded-[36px] bg-[#fffdf9] border border-[#ede0cf] p-6 sm:p-8 text-center relative shadow-[0_20px_50px_rgba(56,18,48,0.06)] overflow-hidden group">
+      {/* Cairo-Style Floating Feature Header Card ("Qibla Compass") */}
+      <div className="rounded-[32px] bg-[#fffdf9] border border-[#ede0cf] p-6 sm:p-8 shadow-[0_16px_40px_rgba(56,18,48,0.06)] relative overflow-hidden group">
         {/* 4K Background Texture: Celestial Astrolabe & Desert Horizon */}
         <img
           src="/images/qibla_header.jpg"
           alt="Celestial Qibla Astrolabe"
-          className="absolute inset-0 w-full h-full object-cover object-[center_20%] opacity-65 pointer-events-none transition-transform duration-700 group-hover:scale-105"
+          className="absolute inset-0 w-full h-full object-cover object-[center_35%] opacity-75 pointer-events-none transition-transform duration-700 group-hover:scale-105"
         />
-        {/* Soft Sunset Translucent Overlay - Reduced for High Image Visibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#fffdf9]/70 via-[#fffdf9]/40 to-[#fffdf9]/85 pointer-events-none" />
-        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-96 h-40 bg-gradient-to-b from-[#fcd485]/20 via-[#f8b475]/10 to-transparent pointer-events-none blur-2xl" />
+        {/* Soft Sunset Translucent Overlay - strictly confined to this header card */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fffdf9]/85 via-[#fffdf9]/50 to-transparent pointer-events-none" />
+        <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br from-[#a987df]/20 via-[#fcd485]/10 to-transparent pointer-events-none blur-2xl" />
 
-        {/* Header */}
-        <div className="space-y-1.5 mb-5 relative z-10">
-          <div className="flex items-center justify-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#e59523]"></span>
-            <span className="text-[11px] uppercase tracking-[0.25em] text-[#e59523] font-bold font-serif">
-              Sacred Geodesic Azimuth
-            </span>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div className="space-y-1.5 max-w-xl text-left">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-serif uppercase tracking-[0.2em] text-[#8c67c5] font-bold">
+                Sacred Geodesic Azimuth
+              </span>
+              <span className="text-[10px] font-mono text-[#785e70] bg-[#f5ecdf] px-2 py-0.5 rounded-full font-bold">
+                {qiblaBearing.toFixed(1)}° Makkah
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-serif text-[#381230] font-bold tracking-tight">
+              Qibla Compass
+            </h2>
+            <div className="text-sm text-[#e59523] font-serif font-semibold tracking-widest">
+              بوصلة القبلة
+            </div>
+            <p className="text-xs sm:text-sm font-serif italic text-[#785e70] leading-relaxed">
+              Astronomical great-circle bearing pointing directly toward the Holy Kaaba in Makkah.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif text-[#381230] font-bold tracking-tight">
-            Qibla Compass
-          </h1>
-          <div className="text-sm text-[#e59523] font-serif font-semibold tracking-widest">
-            بوصلة القبلة
+
+          <div className="shrink-0 flex items-center gap-2.5">
+            <button
+              onClick={requestSensorPermission}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-serif text-xs font-bold uppercase tracking-wider shadow-md transition-all cursor-pointer ${
+                sensorActive
+                  ? 'bg-gradient-to-r from-[#1f9a84] to-[#177a68] text-white shadow-[#1f9a84]/25'
+                  : 'bg-gradient-to-r from-[#8c67c5] to-[#734fa8] hover:from-[#9d78d4] hover:to-[#8c67c5] text-white shadow-[#8c67c5]/25'
+              }`}
+            >
+              <RiSmartphoneLine className="w-3.5 h-3.5" />
+              <span>{sensorActive ? 'Live Sensor Active' : 'Calibrate Sensor'}</span>
+            </button>
           </div>
-          <p className="text-xs font-serif italic text-[#785e70] max-w-sm mx-auto pt-1">
-            Astronomical great-circle bearing pointing directly toward the Holy Kaaba in Makkah.
-          </p>
         </div>
+      </div>
 
+      {/* Master Compass Card - 100% clean, crisp typography with ZERO overlay covering any text */}
+      <div className="rounded-[32px] bg-[#fffdf9] border border-[#ede0cf] p-6 sm:p-8 text-center shadow-[0_16px_40px_rgba(56,18,48,0.06)]">
         {/* Dynamic Alignment Badge */}
         <div
           className={`py-2 px-5 mb-4 border transition-all duration-300 inline-flex items-center justify-center gap-2 text-xs uppercase tracking-widest rounded-full ${
