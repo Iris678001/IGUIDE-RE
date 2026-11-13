@@ -39,8 +39,15 @@ export const OfflineManagerView: React.FC<OfflineManagerViewProps> = ({
   return (
     <div className="space-y-6 font-serif">
       {/* Cairo-Style Floating Feature Card ("Saved & Offline") */}
-      <div className="rounded-[32px] bg-[#fffdf9] border border-[#ede0cf] p-6 sm:p-8 shadow-[0_16px_40px_rgba(56,18,48,0.06)] relative overflow-hidden">
+      <div className="rounded-[32px] bg-[#fffdf9] border border-[#ede0cf] p-6 sm:p-8 shadow-[0_16px_40px_rgba(56,18,48,0.06)] relative overflow-hidden group">
+        {/* 4K Background Texture: Sacred Islamic Library Archive */}
+        <img
+          src="/images/saved_header.jpg"
+          alt="Sacred Heritage Library"
+          className="absolute inset-0 w-full h-full object-cover object-[center_35%] opacity-30 mix-blend-multiply pointer-events-none transition-transform duration-700 group-hover:scale-105"
+        />
         {/* Soft Sunset Radial Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fffdf9] via-[#fffdf9]/85 to-[#fffdf9]/60 pointer-events-none" />
         <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br from-[#1f9a84]/20 via-[#fcd485]/15 to-transparent pointer-events-none blur-2xl" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">

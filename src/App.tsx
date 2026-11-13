@@ -21,7 +21,7 @@ import { AudioPlayerBar } from './components/AudioPlayer/AudioPlayerBar';
 import { MosqueFinderView } from './components/MosqueFinder/MosqueFinderView';
 import { QiblaCompassView } from './components/Qibla/QiblaCompassView';
 import { OfflineManagerView } from './components/OfflineManager/OfflineManagerView';
-import { ArrowRight, BookOpen, Compass, DownloadCloud, Landmark, Loader2, Sparkles } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 export default function App() {
   const isOnline = useOnlineStatus();
@@ -243,129 +243,6 @@ export default function App() {
       <OfflineIndicator />
       
       <Navbar activeTab={activeTab} onNavigateTab={setActiveTab} />
-
-      {/* Cairo Experience Section (Shown when not in reader mode) */}
-      {!currentSurah && (
-        <section className="max-w-7xl w-full mx-auto px-4 sm:px-6 pt-5 pb-2">
-          {/* Sunset Hero Panorama Banner with 4K Cairo Landscape */}
-          <div className="relative rounded-[36px] overflow-hidden border border-[#ede0cf] shadow-xl min-h-[380px] sm:min-h-[440px] flex flex-col justify-between p-6 sm:p-10 mb-6 group">
-            {/* 4K Background Panorama */}
-            <img
-              src="/images/cairo_sunset_panorama.jpg"
-              alt="Cairo Sunset Panorama"
-              className="absolute inset-0 w-full h-full object-cover object-[center_30%] transition-transform duration-1000 group-hover:scale-105 pointer-events-none"
-            />
-            {/* Multi-stop warm sunset atmospheric gradient for clear text readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#200a1b]/95 via-[#200a1b]/45 to-[#200a1b]/20 pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#200a1b]/80 via-[#200a1b]/30 to-transparent pointer-events-none" />
-
-            {/* Top Brand Header */}
-            <div className="relative z-10 max-w-xl text-white">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 shadow-sm mb-3">
-                <Sparkles className="w-3.5 h-3.5 text-[#ffcd78]" />
-                <span className="text-[11px] font-sans font-semibold tracking-wider text-[#ffecb3] uppercase">
-                  Islamic Heritage Companion
-                </span>
-              </div>
-              <h1 className="text-4xl sm:text-6xl font-serif font-black tracking-tight text-white leading-none mb-2 drop-shadow-md">
-                iGUIDE
-              </h1>
-              <p className="text-sm sm:text-base text-[#f7e6d0] font-serif italic max-w-md drop-shadow">
-                Timeless wonders, endless spiritual stories. Explore sacred Kerala mosques, Holy Qur'an recitations, and authentic Qibla direction.
-              </p>
-            </div>
-
-            {/* Bottom Floating Ivory Card - "Your Sacred Experience" */}
-            <div className="relative z-10 mt-8 rounded-[28px] bg-white/95 backdrop-blur-md p-4 sm:p-6 border border-[#ede0cf] shadow-2xl">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                <div>
-                  <h3 className="text-base sm:text-lg font-serif font-bold text-[#381230]">
-                    Your Sacred Experience
-                  </h3>
-                  <p className="text-xs text-[#785e70] font-serif italic">
-                    Tap to explore holy scripture, historical mosques, or live Qibla.
-                  </p>
-                </div>
-                <div className="hidden sm:flex items-center gap-2 text-xs font-serif font-semibold text-[#e59523]">
-                  <span>Discover All</span>
-                  <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
-
-              {/* 4 Raised Tactile 3D Squircles matching reference image */}
-              <div className="grid grid-cols-4 gap-2.5 sm:gap-4">
-                {/* Holy Quran Squircle */}
-                <button
-                  onClick={() => setActiveTab('quran')}
-                  className="flex flex-col items-center group cursor-pointer"
-                >
-                  <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-[22px] flex items-center justify-center transition-all shadow-md group-hover:scale-105 active:scale-95 ${
-                    activeTab === 'quran'
-                      ? 'bg-gradient-to-b from-[#fdb849] via-[#e59523] to-[#c7770d] text-white shadow-amber-500/30 ring-2 ring-[#e59523]'
-                      : 'bg-gradient-to-b from-[#ffcd78] via-[#f1a536] to-[#d68516] text-white shadow-amber-900/10'
-                  }`}>
-                    <BookOpen className="w-7 h-7 sm:w-8 sm:h-8 drop-shadow" />
-                  </div>
-                  <span className="text-[11px] sm:text-xs font-serif font-bold text-[#381230] mt-2 text-center">
-                    Holy Qur'an
-                  </span>
-                </button>
-
-                {/* Kerala Mosques Squircle */}
-                <button
-                  onClick={() => setActiveTab('mosques')}
-                  className="flex flex-col items-center group cursor-pointer"
-                >
-                  <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-[22px] flex items-center justify-center transition-all shadow-md group-hover:scale-105 active:scale-95 ${
-                    activeTab === 'mosques'
-                      ? 'bg-gradient-to-b from-[#ff7d66] via-[#ea5d47] to-[#c2351f] text-white shadow-red-500/30 ring-2 ring-[#ea5d47]'
-                      : 'bg-gradient-to-b from-[#f9927f] via-[#ef6f5c] to-[#d34731] text-white shadow-red-900/10'
-                  }`}>
-                    <Landmark className="w-7 h-7 sm:w-8 sm:h-8 drop-shadow" />
-                  </div>
-                  <span className="text-[11px] sm:text-xs font-serif font-bold text-[#381230] mt-2 text-center">
-                    Mosques
-                  </span>
-                </button>
-
-                {/* Qibla Compass Squircle */}
-                <button
-                  onClick={() => setActiveTab('qibla')}
-                  className="flex flex-col items-center group cursor-pointer"
-                >
-                  <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-[22px] flex items-center justify-center transition-all shadow-md group-hover:scale-105 active:scale-95 ${
-                    activeTab === 'qibla'
-                      ? 'bg-gradient-to-b from-[#a987df] via-[#8c67c5] to-[#6c48a8] text-white shadow-purple-500/30 ring-2 ring-[#8c67c5]'
-                      : 'bg-gradient-to-b from-[#bfa2ec] via-[#9773ce] to-[#7954b4] text-white shadow-purple-900/10'
-                  }`}>
-                    <Compass className="w-7 h-7 sm:w-8 sm:h-8 drop-shadow" />
-                  </div>
-                  <span className="text-[11px] sm:text-xs font-serif font-bold text-[#381230] mt-2 text-center">
-                    Qibla
-                  </span>
-                </button>
-
-                {/* Saved & Offline Squircle */}
-                <button
-                  onClick={() => setActiveTab('offline')}
-                  className="flex flex-col items-center group cursor-pointer"
-                >
-                  <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-[22px] flex items-center justify-center transition-all shadow-md group-hover:scale-105 active:scale-95 ${
-                    activeTab === 'offline'
-                      ? 'bg-gradient-to-b from-[#3cc1a9] via-[#1f9a84] to-[#127765] text-white shadow-teal-500/30 ring-2 ring-[#1f9a84]'
-                      : 'bg-gradient-to-b from-[#56d2bc] via-[#2cb098] to-[#1a8874] text-white shadow-teal-900/10'
-                  }`}>
-                    <DownloadCloud className="w-7 h-7 sm:w-8 sm:h-8 drop-shadow" />
-                  </div>
-                  <span className="text-[11px] sm:text-xs font-serif font-bold text-[#381230] mt-2 text-center">
-                    Saved
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
         {/* TAB: QURAN */}

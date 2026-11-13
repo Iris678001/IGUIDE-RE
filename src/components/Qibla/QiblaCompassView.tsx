@@ -407,8 +407,15 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
   return (
     <div className="space-y-6 max-w-2xl mx-auto font-serif">
       {/* Cairo-Style Astrolabe Qibla Compass Card */}
-      <div className="rounded-[36px] bg-[#fffdf9] border border-[#ede0cf] p-6 sm:p-8 text-center relative shadow-[0_20px_50px_rgba(56,18,48,0.06)] overflow-hidden">
+      <div className="rounded-[36px] bg-[#fffdf9] border border-[#ede0cf] p-6 sm:p-8 text-center relative shadow-[0_20px_50px_rgba(56,18,48,0.06)] overflow-hidden group">
+        {/* 4K Background Texture: Celestial Astrolabe & Desert Horizon */}
+        <img
+          src="/images/qibla_header.jpg"
+          alt="Celestial Qibla Astrolabe"
+          className="absolute inset-0 w-full h-full object-cover object-[center_20%] opacity-25 mix-blend-multiply pointer-events-none transition-transform duration-700 group-hover:scale-105"
+        />
         {/* Soft Sunset Radial Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#fffdf9]/75 via-[#fffdf9]/95 to-[#fffdf9] pointer-events-none" />
         <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-96 h-40 bg-gradient-to-b from-[#fcd485]/30 via-[#f8b475]/15 to-transparent pointer-events-none blur-2xl" />
 
         {/* Header */}

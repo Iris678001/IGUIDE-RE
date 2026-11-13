@@ -60,14 +60,14 @@ export const SurahList: React.FC<SurahListProps> = ({
     <div className="space-y-6">
       {/* Cairo-Style Floating Feature Card ("Discover the Holy Quran") */}
       <div className="rounded-[32px] bg-[#fffdf9] border border-[#ede0cf] p-6 sm:p-8 shadow-[0_16px_40px_rgba(56,18,48,0.06)] relative overflow-hidden group">
-        {/* 4K Background Texture: Khan el-Khalili minarets and lanterns */}
+        {/* 4K Background Texture: Illuminated Holy Qur'an Manuscript */}
         <img
-          src="/images/cairo_bazaar_minarets.jpg"
-          alt="Cairo Minarets & Bazaar"
-          className="absolute inset-0 w-full h-full object-cover object-[center_30%] opacity-25 mix-blend-multiply pointer-events-none transition-transform duration-700 group-hover:scale-105"
+          src="/images/quran_header.jpg"
+          alt="Illuminated Holy Qur'an Manuscript"
+          className="absolute inset-0 w-full h-full object-cover object-[center_35%] opacity-35 mix-blend-multiply pointer-events-none transition-transform duration-700 group-hover:scale-105"
         />
         {/* Soft Sunset Radial Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#fffdf9] via-[#fffdf9]/90 to-[#fffdf9]/70 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fffdf9] via-[#fffdf9]/85 to-[#fffdf9]/60 pointer-events-none" />
         <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br from-[#fcd485]/30 via-[#f8b475]/20 to-transparent pointer-events-none blur-2xl" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">

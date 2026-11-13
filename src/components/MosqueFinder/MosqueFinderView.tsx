@@ -330,14 +330,14 @@ export const MosqueFinderView: React.FC<MosqueFinderViewProps> = () => {
     <div className="space-y-6">
       {/* Cairo-Style Floating Feature Card ("Explore Kerala Mosques") */}
       <div className="rounded-[32px] bg-[#fffdf9] border border-[#ede0cf] p-6 sm:p-8 shadow-[0_16px_40px_rgba(56,18,48,0.06)] relative overflow-hidden group">
-        {/* 4K Background Texture: Historic Kerala wooden mosque at sunset with water pond */}
+        {/* 4K Background Texture: Historic Malabar Kerala wooden mosque at sunset with serene water pond */}
         <img
-          src="/images/kerala_heritage_mosque.jpg"
+          src="/images/mosques_header.jpg"
           alt="Kerala Heritage Mosque"
-          className="absolute inset-0 w-full h-full object-cover object-[center_35%] opacity-25 mix-blend-multiply pointer-events-none transition-transform duration-700 group-hover:scale-105"
+          className="absolute inset-0 w-full h-full object-cover object-[center_35%] opacity-35 mix-blend-multiply pointer-events-none transition-transform duration-700 group-hover:scale-105"
         />
         {/* Soft Sunset Radial Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#fffdf9] via-[#fffdf9]/90 to-[#fffdf9]/70 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fffdf9] via-[#fffdf9]/85 to-[#fffdf9]/60 pointer-events-none" />
         <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br from-[#ea5d47]/20 via-[#fcd485]/20 to-transparent pointer-events-none blur-2xl" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
