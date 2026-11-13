@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Ayah, SurahData, TafsirData } from '../../types/quran';
 import { fetchAyahTafsir } from '../../services/quranApi';
-import { BookOpen, Check, Copy, Volume2, X } from 'lucide-react';
+import {
+  RiBookOpenLine,
+  RiCheckLine,
+  RiFileCopyLine,
+  RiVolumeUpLine,
+  RiCloseLine,
+} from 'react-icons/ri';
 
 interface TafsirModalProps {
   surah: SurahData;
@@ -63,7 +69,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
         <div className="p-4 sm:p-5 border-b border-[#232730] flex items-center justify-between bg-[#13171e]">
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 border border-[#c8a261] flex items-center justify-center text-[#c8a261]">
-              <BookOpen className="w-3.5 h-3.5" />
+              <RiBookOpenLine className="w-3.5 h-3.5" />
             </div>
             <div>
               <span className="text-[10px] font-mono uppercase tracking-widest text-[#c8a261] block">
@@ -80,7 +86,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
             className="p-1.5 border border-[#2d323e] hover:border-[#c8a261] text-[#9aa0a6] hover:text-[#f3efe6] transition-colors cursor-pointer"
             aria-label="Close Tafsir"
           >
-            <X className="w-4 h-4" />
+            <RiCloseLine className="w-4 h-4" />
           </button>
         </div>
 
@@ -132,7 +138,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
                 onClick={() => onPlayAyah(ayah)}
                 className="flex items-center gap-1.5 px-3 py-1.5 border border-[#2d323e] hover:border-[#c8a261] text-[#c8a261] text-xs font-serif uppercase tracking-wider transition-colors cursor-pointer"
               >
-                <Volume2 className="w-3.5 h-3.5" />
+                <RiVolumeUpLine className="w-3.5 h-3.5" />
                 <span>Hear Recitation</span>
               </button>
             )}
@@ -141,7 +147,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
               onClick={handleCopy}
               className="flex items-center gap-1.5 px-3 py-1.5 border border-[#2d323e] hover:border-[#c8a261] text-[#9aa0a6] hover:text-[#f3efe6] text-xs font-serif uppercase tracking-wider transition-colors cursor-pointer"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-[#72b896]" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <RiCheckLine className="w-3.5 h-3.5 text-[#72b896]" /> : <RiFileCopyLine className="w-3.5 h-3.5" />}
               <span>{copied ? 'Copied' : 'Copy'}</span>
             </button>
           </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, BookOpen, MapPin, BookmarkCheck } from 'lucide-react';
+import { RiCompass3Line, RiBookOpenLine, RiMapPin2Line, RiBookmark3Line } from 'react-icons/ri';
 
 interface NavbarProps {
   activeTab: 'quran' | 'mosques' | 'qibla' | 'offline';
@@ -40,7 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigateTab }) => {
                 : 'text-[#785e70] hover:text-[#381230]'
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5 text-[#e59523]" />
+            <RiBookOpenLine className="w-3.5 h-3.5 text-[#e59523]" />
             <span>Holy Quran</span>
           </button>
           <button
@@ -51,7 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigateTab }) => {
                 : 'text-[#785e70] hover:text-[#381230]'
             }`}
           >
-            <MapPin className="w-3.5 h-3.5 text-[#ea5d47]" />
+            <RiMapPin2Line className="w-3.5 h-3.5 text-[#ea5d47]" />
             <span>Kerala Mosques</span>
           </button>
           <button
@@ -62,7 +62,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigateTab }) => {
                 : 'text-[#785e70] hover:text-[#381230]'
             }`}
           >
-            <Compass className="w-3.5 h-3.5 text-[#8c67c5]" />
+            <RiCompass3Line className="w-3.5 h-3.5 text-[#8c67c5]" />
             <span>Qibla Compass</span>
           </button>
           <button
@@ -73,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigateTab }) => {
                 : 'text-[#785e70] hover:text-[#381230]'
             }`}
           >
-            <BookmarkCheck className="w-3.5 h-3.5 text-[#1f9a84]" />
+            <RiBookmark3Line className="w-3.5 h-3.5 text-[#1f9a84]" />
             <span>Saved &amp; Offline</span>
           </button>
         </nav>

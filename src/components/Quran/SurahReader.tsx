@@ -1,20 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Ayah, Reciter, SurahData } from '../../types/quran';
 import {
-  Bookmark,
-  BookmarkCheck,
-  BookOpen,
-  Check,
-  Copy,
-  Download,
-  Pause,
-  Play,
-  Settings2,
-  ArrowLeft,
-  ArrowRight,
-  Heart,
-  Sparkles
-} from 'lucide-react';
+  RiArrowLeftLine,
+  RiEqualizerLine,
+  RiPauseMiniFill,
+  RiPlayMiniFill,
+  RiBookmarkLine,
+  RiBookOpenLine,
+  RiCheckLine,
+  RiFileCopyLine,
+} from 'react-icons/ri';
 import { TafsirModal } from './TafsirModal';
 
 interface SurahReaderProps {
@@ -87,7 +82,7 @@ export const SurahReader: React.FC<SurahReaderProps> = ({
           aria-label="Back to Surahs"
           title="Back to Surah List"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <RiArrowLeftLine className="w-5 h-5" />
         </button>
 
         {/* Center Title Badge */}
@@ -107,7 +102,7 @@ export const SurahReader: React.FC<SurahReaderProps> = ({
           aria-label="Reader Settings"
           title="Display & Font Settings"
         >
-          <Settings2 className="w-5 h-5" />
+          <RiEqualizerLine className="w-5 h-5" />
         </button>
       </div>
 
@@ -248,7 +243,7 @@ export const SurahReader: React.FC<SurahReaderProps> = ({
                     }`}
                     title={isPlayingThis ? 'Pause recitation' : 'Play Ayah recitation'}
                   >
-                    {isPlayingThis ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
+                    {isPlayingThis ? <RiPauseMiniFill className="w-4 h-4" /> : <RiPlayMiniFill className="w-4 h-4 ml-0.5" />}
                   </button>
 
                   {/* Bookmark Button */}
@@ -261,7 +256,7 @@ export const SurahReader: React.FC<SurahReaderProps> = ({
                     }`}
                     title={isBookmarked ? 'Remove bookmark' : 'Bookmark this verse'}
                   >
-                    <Bookmark className="w-3.5 h-3.5" />
+                    <RiBookmarkLine className="w-3.5 h-3.5" />
                   </button>
 
                   {/* Tafsir Modal Trigger */}
@@ -270,7 +265,7 @@ export const SurahReader: React.FC<SurahReaderProps> = ({
                     className="w-8 h-8 rounded-full bg-[#f5ecdf]/70 text-[#785e70] hover:text-[#381230] hover:bg-[#fbf5eb] flex items-center justify-center transition-all cursor-pointer"
                     title="Read classical Tafsir commentary"
                   >
-                    <BookOpen className="w-3.5 h-3.5" />
+                    <RiBookOpenLine className="w-3.5 h-3.5" />
                   </button>
 
                   {/* Copy Button */}
@@ -280,9 +275,9 @@ export const SurahReader: React.FC<SurahReaderProps> = ({
                     title="Copy verse"
                   >
                     {copiedAyahNum === ayah.numberInSurah ? (
-                      <Check className="w-3.5 h-3.5 text-[#1f9a84]" />
+                      <RiCheckLine className="w-3.5 h-3.5 text-[#1f9a84]" />
                     ) : (
-                      <Copy className="w-3.5 h-3.5" />
+                      <RiFileCopyLine className="w-3.5 h-3.5" />
                     )}
                   </button>
                 </div>

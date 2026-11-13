@@ -2,15 +2,13 @@ import React, { useMemo, useState } from 'react';
 import { SurahMeta } from '../../types/quran';
 import { SURAH_LIST } from '../../data/surahList';
 import {
-  BookOpen,
-  Check,
-  ChevronRight,
-  Download,
-  History,
-  Search,
-  Sparkles,
-  ArrowRight
-} from 'lucide-react';
+  RiBookOpenLine,
+  RiArrowRightSLine,
+  RiDownloadLine,
+  RiHistoryLine,
+  RiSearch2Line,
+  RiArrowRightLine,
+} from 'react-icons/ri';
 
 interface SurahListProps {
   onSelectSurah: (surahNumber: number) => void;
@@ -74,7 +72,7 @@ export const SurahList: React.FC<SurahListProps> = ({
           <div className="flex items-start gap-4">
             {/* Raised Saffron Squircle Icon Badge (from reference image) */}
             <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[22px] bg-gradient-to-tr from-[#e59523] to-[#f5b247] shadow-lg shadow-[#e59523]/30 flex items-center justify-center shrink-0 text-white">
-              <BookOpen className="w-7 h-7" />
+              <RiBookOpenLine className="w-7 h-7" />
             </div>
 
             <div className="space-y-1">
@@ -103,7 +101,7 @@ export const SurahList: React.FC<SurahListProps> = ({
                 disabled={isDownloadingAll}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-[#e59523] to-[#d4811a] hover:from-[#f0a22a] hover:to-[#e59523] text-white font-serif text-xs font-bold uppercase tracking-wider shadow-md shadow-[#e59523]/25 transition-all cursor-pointer disabled:opacity-50"
               >
-                <Download className="w-3.5 h-3.5" />
+                <RiDownloadLine className="w-3.5 h-3.5" />
                 <span>
                   {isDownloadingAll
                     ? 'Saving Surahs...'
@@ -126,7 +124,7 @@ export const SurahList: React.FC<SurahListProps> = ({
           <div className="flex items-center gap-3.5 min-w-0">
             {/* Saffron Circular Icon */}
             <div className="w-11 h-11 rounded-full bg-[#fbf5eb] border border-[#edd7b6] text-[#e59523] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-              <History className="w-5 h-5" />
+              <RiHistoryLine className="w-5 h-5" />
             </div>
             <div className="truncate">
               <div className="flex items-center gap-2">
@@ -149,7 +147,7 @@ export const SurahList: React.FC<SurahListProps> = ({
             </span>
             {/* Saffron Circular Arrow Button (like in reference image) */}
             <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#e59523] to-[#f5b247] text-white flex items-center justify-center shadow-md group-hover:translate-x-1 transition-transform">
-              <ArrowRight className="w-4 h-4" />
+              <RiArrowRightLine className="w-4 h-4" />
             </div>
           </div>
         </div>
@@ -159,7 +157,7 @@ export const SurahList: React.FC<SurahListProps> = ({
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Search Input in Rounded White Card */}
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#9c8495]" />
+          <RiSearch2Line className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#9c8495]" />
           <input
             type="text"
             value={searchQuery}
@@ -244,7 +242,7 @@ export const SurahList: React.FC<SurahListProps> = ({
 
                 {/* Saffron Circular Arrow (from Cairo reference) */}
                 <div className="w-7 h-7 rounded-full bg-[#fbf5eb] text-[#e59523] group-hover:bg-[#e59523] group-hover:text-white transition-all flex items-center justify-center">
-                  <ChevronRight className="w-4 h-4" />
+                  <RiArrowRightSLine className="w-4 h-4" />
                 </div>
               </div>
             </div>
@@ -254,7 +252,7 @@ export const SurahList: React.FC<SurahListProps> = ({
 
       {filteredSurahs.length === 0 && (
         <div className="text-center py-16 rounded-[28px] bg-[#fffdf9] border border-[#ede0cf] p-8 space-y-2 text-[#785e70]">
-          <BookOpen className="w-8 h-8 mx-auto text-[#9c8495]" />
+          <RiBookOpenLine className="w-8 h-8 mx-auto text-[#9c8495]" />
           <p className="text-base font-serif font-bold text-[#381230]">No Surahs matched your search.</p>
           <p className="text-xs text-[#9c8495]">Try searching by Surah number (e.g. 36) or common name (e.g. Ya-Sin).</p>
         </div>

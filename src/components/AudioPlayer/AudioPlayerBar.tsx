@@ -2,16 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Ayah, Reciter, SurahData } from '../../types/quran';
 import { POPULAR_RECITERS } from '../../data/surahList';
 import {
-  ChevronDown,
-  Pause,
-  Play,
-  Repeat,
-  Repeat1,
-  SkipBack,
-  SkipForward,
-  Volume2,
-  X
-} from 'lucide-react';
+  RiArrowDownSLine,
+  RiPauseMiniFill,
+  RiPlayMiniFill,
+  RiRepeat2Line,
+  RiRepeatOneLine,
+  RiSkipBackFill,
+  RiSkipForwardFill,
+  RiVolumeUpLine,
+  RiCloseLine,
+} from 'react-icons/ri';
 
 interface AudioPlayerBarProps {
   currentSurah: SurahData | null;
@@ -158,7 +158,7 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({
           {/* Left: Surah & Ayah Info */}
           <div className="flex items-center gap-2.5 min-w-0 max-w-[42%] sm:max-w-xs">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#e59523] to-[#d87c10] flex items-center justify-center text-white shrink-0 shadow-sm">
-              <Volume2 className="w-4 h-4" />
+              <RiVolumeUpLine className="w-4 h-4" />
             </div>
             <div className="truncate">
               <div className="flex items-center gap-1.5">
@@ -182,7 +182,7 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({
               aria-label="Previous Ayah"
               className="w-8 h-8 rounded-full bg-[#fbf5ed] border border-[#ede0cf] hover:bg-[#f6eee3] text-[#785e70] hover:text-[#381230] flex items-center justify-center transition-colors cursor-pointer"
             >
-              <SkipBack className="w-3.5 h-3.5" />
+              <RiSkipBackFill className="w-3.5 h-3.5" />
             </button>
 
             <button
@@ -191,9 +191,9 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({
               className="w-10 h-10 rounded-full bg-gradient-to-br from-[#e59523] to-[#d87c10] text-white shadow-md hover:shadow-lg flex items-center justify-center active:scale-95 transition-all cursor-pointer"
             >
               {isPlaying ? (
-                <Pause className="w-4 h-4 fill-current" />
+                <RiPauseMiniFill className="w-5 h-5 fill-current" />
               ) : (
-                <Play className="w-4 h-4 fill-current ml-0.5" />
+                <RiPlayMiniFill className="w-5 h-5 fill-current ml-0.5" />
               )}
             </button>
 
@@ -202,7 +202,7 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({
               aria-label="Next Ayah"
               className="w-8 h-8 rounded-full bg-[#fbf5ed] border border-[#ede0cf] hover:bg-[#f6eee3] text-[#785e70] hover:text-[#381230] flex items-center justify-center transition-colors cursor-pointer"
             >
-              <SkipForward className="w-3.5 h-3.5" />
+              <RiSkipForwardFill className="w-3.5 h-3.5" />
             </button>
           </div>
 
@@ -219,9 +219,9 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({
               }`}
             >
               {repeatMode === 'ayah' ? (
-                <Repeat1 className="w-3 h-3" />
+                <RiRepeatOneLine className="w-3.5 h-3.5" />
               ) : (
-                <Repeat className="w-3 h-3" />
+                <RiRepeat2Line className="w-3.5 h-3.5" />
               )}
             </button>
 
@@ -242,7 +242,7 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({
                 className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#fbf5ed] border border-[#ede0cf] hover:bg-[#f6eee3] text-xs text-[#381230] font-serif transition-colors cursor-pointer"
               >
                 <span className="truncate max-w-[80px]">{selectedReciter.name.split(' ')[0]}</span>
-                <ChevronDown className="w-3 h-3 text-[#785e70]" />
+                <RiArrowDownSLine className="w-3.5 h-3.5 text-[#785e70]" />
               </button>
 
               {showReciters && (
@@ -282,7 +282,7 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({
                 aria-label="Close audio player"
                 className="w-7 h-7 rounded-full bg-[#fbf5ed] border border-[#ede0cf] hover:bg-[#f6eee3] text-[#785e70] hover:text-[#381230] flex items-center justify-center transition-colors cursor-pointer"
               >
-                <X className="w-3.5 h-3.5" />
+                <RiCloseLine className="w-4 h-4" />
               </button>
             )}
           </div>

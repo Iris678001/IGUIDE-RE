@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
-import { Download, Smartphone, X } from 'lucide-react';
+import { RiDownloadLine, RiSmartphoneLine, RiCloseLine } from 'react-icons/ri';
 
 export const PWAInstallButton: React.FC = () => {
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
@@ -18,7 +18,7 @@ export const PWAInstallButton: React.FC = () => {
           aria-label="Install iguide PWA"
           className="flex items-center gap-1.5 border border-[#3e3422] bg-[#181c24] hover:bg-[#202530] text-[#c8a261] text-xs font-serif uppercase tracking-wider px-3 py-1 transition-colors cursor-pointer"
         >
-          <Download className="w-3 h-3" />
+          <RiDownloadLine className="w-3.5 h-3.5" />
           <span>Install App</span>
         </button>
       )}
@@ -29,7 +29,7 @@ export const PWAInstallButton: React.FC = () => {
           aria-label="Install iguide on iPhone or iPad"
           className="flex items-center gap-1.5 border border-[#2d323e] bg-[#141720] hover:bg-[#1a1e28] text-[#d6d0c4] text-xs font-serif uppercase tracking-wider px-3 py-1 transition-colors cursor-pointer"
         >
-          <Smartphone className="w-3 h-3 text-[#c8a261]" />
+          <RiSmartphoneLine className="w-3.5 h-3.5 text-[#c8a261]" />
           <span>Add to iOS</span>
         </button>
       )}
@@ -40,7 +40,7 @@ export const PWAInstallButton: React.FC = () => {
             <div className="flex items-center justify-between border-b border-[#232730] pb-3 mb-4">
               <div className="flex items-center gap-2">
                 <span className="p-1 border border-[#c8a261] text-[#c8a261]">
-                  <Smartphone className="w-4 h-4" />
+                  <RiSmartphoneLine className="w-4 h-4" />
                 </span>
                 <h3 className="text-base font-bold text-[#f3efe6]">Install on iOS</h3>
               </div>
@@ -48,7 +48,7 @@ export const PWAInstallButton: React.FC = () => {
                 onClick={() => setShowIOSGuide(false)}
                 className="p-1 border border-[#2d323e] text-[#9aa0a6] hover:text-[#f3efe6] cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <RiCloseLine className="w-4 h-4" />
               </button>
             </div>
 

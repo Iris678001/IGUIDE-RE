@@ -2,15 +2,15 @@ import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { UserLocation } from '../../types/mosque';
 import { calculateDistanceKm, calculateQiblaBearing, KAABA_COORDS } from '../../utils/distance';
 import {
-  Compass,
-  Locate,
-  MapPin,
-  Smartphone,
-  CheckCircle2,
-  RotateCw,
-  Volume2,
-  Map as MapIcon,
-} from 'lucide-react';
+  RiCompass3Line,
+  RiCrosshair2Line,
+  RiMapPin2Line,
+  RiSmartphoneLine,
+  RiCheckboxCircleLine,
+  RiRefreshLine,
+  RiVolumeUpLine,
+  RiMap2Line,
+} from 'react-icons/ri';
 import L from 'leaflet';
 
 interface QiblaCompassViewProps {
@@ -447,12 +447,12 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
         >
           {isAligned ? (
             <>
-              <CheckCircle2 className="w-4 h-4 text-[#1f9a84] animate-pulse" />
+              <RiCheckboxCircleLine className="w-4 h-4 text-[#1f9a84] animate-pulse" />
               <span>{turnGuidance}</span>
             </>
           ) : (
             <>
-              <Compass className="w-4 h-4 text-[#e59523]" />
+              <RiCompass3Line className="w-4 h-4 text-[#e59523]" />
               <span>{turnGuidance}</span>
             </>
           )}
@@ -737,7 +737,7 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
         <div className="border border-[#ede0cf] bg-[#fbf5eb] p-4 mt-6 text-left rounded-[28px]">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <MapIcon className="w-4 h-4 text-[#e59523]" />
+              <RiMap2Line className="w-4 h-4 text-[#e59523]" />
               <h2 className="text-sm font-serif font-bold text-[#381230] tracking-wide">
                 Your Path to Makkah · Great-Circle Geodesic
               </h2>
@@ -775,7 +775,7 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
           {sensorState === 'prompt' && !sensorActive && (
             <div className="p-4 rounded-2xl border border-[#ede0cf] bg-[#fbf5eb] flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
               <div className="flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-[#e59523]" />
+                <RiSmartphoneLine className="w-4 h-4 text-[#e59523]" />
                 <span className="text-xs text-[#381230] font-serif">
                   iOS Safari requires explicit permission to enable orientation sensors.
                 </span>
@@ -813,7 +813,7 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
                 }`}
                 title="Toggle haptic vibration upon Kaaba alignment"
               >
-                <Volume2 className="w-3 h-3" />
+                <RiVolumeUpLine className="w-3 h-3" />
                 <span>Haptic: {hapticEnabled ? 'ON' : 'OFF'}</span>
               </button>
             </div>
@@ -822,7 +822,7 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
               onClick={() => setIsManualMode(!isManualMode)}
               className="text-[#e59523] font-bold hover:underline cursor-pointer flex items-center gap-1.5 text-[11px]"
             >
-              <RotateCw className="w-3 h-3" />
+              <RiRefreshLine className="w-3 h-3" />
               <span>{isManualMode ? 'Switch to Live Sensor' : 'Test with Manual Rotation'}</span>
             </button>
           </div>
@@ -867,7 +867,7 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
           {/* Location Bar & Recalibration */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-between text-xs gap-3">
             <div className="flex items-center gap-2 text-[#785e70]">
-              <MapPin className="w-3.5 h-3.5 text-[#e59523]" />
+              <RiMapPin2Line className="w-3.5 h-3.5 text-[#e59523]" />
               <span>
                 {userLocation
                   ? `Kerala (${userLocation.lat.toFixed(3)}°N, ${userLocation.lng.toFixed(3)}°E)`
@@ -879,7 +879,7 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
               onClick={onRequestLocation}
               className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-[#edd7b6] bg-[#fbf5eb] hover:bg-[#f5ecdf] text-[#e59523] text-xs font-serif uppercase tracking-wider font-bold transition-colors cursor-pointer shadow-xs"
             >
-              <Locate className="w-3 h-3" />
+              <RiCrosshair2Line className="w-3 h-3" />
               <span>Calibrate GPS Location</span>
             </button>
           </div>

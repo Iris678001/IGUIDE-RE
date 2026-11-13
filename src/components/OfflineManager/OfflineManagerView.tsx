@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { Bookmark } from '../../types/quran';
 import { SURAH_LIST } from '../../data/surahList';
 import {
-  BookmarkCheck,
-  Check,
-  Download,
-  Trash2,
-  BookOpen,
-  Smartphone,
-  CheckCircle2,
-  Bookmark as BookmarkIcon
-} from 'lucide-react';
+  RiBookmark3Fill,
+  RiCheckLine,
+  RiDownloadLine,
+  RiDeleteBinLine,
+  RiBookOpenLine,
+  RiSmartphoneLine,
+  RiCheckboxCircleLine,
+  RiBookmarkLine,
+} from 'react-icons/ri';
 
 interface OfflineManagerViewProps {
   downloadedSurahNumbers: number[];
@@ -54,7 +54,7 @@ export const OfflineManagerView: React.FC<OfflineManagerViewProps> = ({
           <div className="flex items-start gap-4">
             {/* Raised Turquoise Oasis Squircle Icon Badge */}
             <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[22px] bg-gradient-to-tr from-[#1f9a84] to-[#34b69d] shadow-lg shadow-[#1f9a84]/30 flex items-center justify-center shrink-0 text-white">
-              <BookmarkCheck className="w-7 h-7" />
+              <RiBookmark3Fill className="w-7 h-7" />
             </div>
 
             <div className="space-y-1">
@@ -89,19 +89,19 @@ export const OfflineManagerView: React.FC<OfflineManagerViewProps> = ({
           >
             {allDownloaded ? (
               <>
-                <CheckCircle2 className="w-4 h-4 text-white" />
+                <RiCheckboxCircleLine className="w-4 h-4 text-white" />
                 <span>All 114 Surahs Saved</span>
               </>
             ) : isDownloadingAll ? (
               <>
-                <Download className="w-4 h-4 animate-bounce" />
+                <RiDownloadLine className="w-4 h-4 animate-bounce" />
                 <span>
                   Saving ({downloadProgress.current}/{downloadProgress.total})...
                 </span>
               </>
             ) : (
               <>
-                <Download className="w-4 h-4" />
+                <RiDownloadLine className="w-4 h-4" />
                 <span>Save All Surahs (114)</span>
               </>
             )}
@@ -163,7 +163,7 @@ export const OfflineManagerView: React.FC<OfflineManagerViewProps> = ({
               Device Status
             </span>
             <span className="text-base font-bold text-[#1f9a84] flex items-center gap-1.5 mt-0.5">
-              <Smartphone className="w-4 h-4 text-[#1f9a84]" />
+              <RiSmartphoneLine className="w-4 h-4 text-[#1f9a84]" />
               <span className="text-sm">Ready for Offline Use</span>
             </span>
             <span className="text-[11px] text-[#785e70] block mt-1 font-serif italic">
@@ -183,7 +183,7 @@ export const OfflineManagerView: React.FC<OfflineManagerViewProps> = ({
               : 'text-[#785e70] hover:text-[#381230]'
           }`}
         >
-          <BookmarkIcon className="w-3.5 h-3.5 text-[#e59523]" />
+          <RiBookmarkLine className="w-3.5 h-3.5 text-[#e59523]" />
           <span>Bookmarks ({bookmarks.length})</span>
         </button>
 
@@ -195,7 +195,7 @@ export const OfflineManagerView: React.FC<OfflineManagerViewProps> = ({
               : 'text-[#785e70] hover:text-[#381230]'
           }`}
         >
-          <Check className="w-3.5 h-3.5 text-[#1f9a84]" />
+          <RiCheckLine className="w-3.5 h-3.5 text-[#1f9a84]" />
           <span>Surah List ({downloadedSurahNumbers.length}/114)</span>
         </button>
       </div>
@@ -233,7 +233,7 @@ export const OfflineManagerView: React.FC<OfflineManagerViewProps> = ({
                   onClick={() => onSelectSurah(bm.surahNumber)}
                   className="flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-[#fbf5eb] hover:bg-[#e59523] hover:text-white text-[#e59523] border border-[#edd7b6] text-xs font-serif uppercase tracking-wider font-bold transition-all cursor-pointer"
                 >
-                  <BookOpen className="w-3 h-3" />
+                  <RiBookOpenLine className="w-3 h-3" />
                   <span>Read</span>
                 </button>
                 <button
@@ -241,7 +241,7 @@ export const OfflineManagerView: React.FC<OfflineManagerViewProps> = ({
                   aria-label="Delete bookmark"
                   className="w-8 h-8 rounded-full border border-[#ede0cf] hover:border-red-300 text-[#9c8495] hover:text-red-500 flex items-center justify-center transition-colors cursor-pointer"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <RiDeleteBinLine className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
@@ -249,7 +249,7 @@ export const OfflineManagerView: React.FC<OfflineManagerViewProps> = ({
 
           {bookmarks.length === 0 && (
             <div className="text-center py-16 rounded-[28px] border border-[#ede0cf] bg-[#fffdf9] p-8 space-y-2 text-[#785e70]">
-              <BookmarkCheck className="w-8 h-8 mx-auto text-[#9c8495]" />
+              <RiBookmark3Fill className="w-8 h-8 mx-auto text-[#9c8495]" />
               <p className="text-base font-serif font-bold text-[#381230]">No bookmarks saved yet.</p>
               <p className="text-xs text-[#9c8495] max-w-sm mx-auto">
                 While reading the Qur'an, tap the bookmark icon on any verse to save it here for quick reading anytime.
@@ -292,7 +292,7 @@ export const OfflineManagerView: React.FC<OfflineManagerViewProps> = ({
                 <div className="shrink-0">
                   {isDownloaded ? (
                     <span className="text-[11px] font-mono text-[#1f9a84] font-bold flex items-center gap-1 bg-[#edf8f4] px-2 py-0.5 rounded-full">
-                      <Check className="w-3.5 h-3.5" />
+                      <RiCheckLine className="w-3.5 h-3.5" />
                       <span>Saved</span>
                     </span>
                   ) : (

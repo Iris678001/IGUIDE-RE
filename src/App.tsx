@@ -21,7 +21,7 @@ import { AudioPlayerBar } from './components/AudioPlayer/AudioPlayerBar';
 import { MosqueFinderView } from './components/MosqueFinder/MosqueFinderView';
 import { QiblaCompassView } from './components/Qibla/QiblaCompassView';
 import { OfflineManagerView } from './components/OfflineManager/OfflineManagerView';
-import { Loader2 } from 'lucide-react';
+import { RiLoader4Line } from 'react-icons/ri';
 
 export default function App() {
   const isOnline = useOnlineStatus();
@@ -250,7 +250,7 @@ export default function App() {
           <>
             {isLoadingSurah ? (
               <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3">
-                <Loader2 className="w-8 h-8 text-[#e59523] animate-spin" />
+                <RiLoader4Line className="w-8 h-8 text-[#e59523] animate-spin" />
                 <p className="text-xs uppercase tracking-widest text-[#785e70] font-sans font-semibold">Opening Holy Manuscript...</p>
               </div>
             ) : surahError ? (

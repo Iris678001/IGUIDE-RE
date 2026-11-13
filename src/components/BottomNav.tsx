@@ -1,5 +1,10 @@
 import React from 'react';
-import { BookmarkCheck, BookOpen, Compass, Landmark } from 'lucide-react';
+import {
+  RiBookmark3Line,
+  RiBookOpenLine,
+  RiCompass3Line,
+  RiAncientPavilionLine,
+} from 'react-icons/ri';
 
 interface BottomNavProps {
   activeTab: 'quran' | 'mosques' | 'qibla' | 'offline';
@@ -16,7 +21,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     {
       id: 'quran' as const,
       label: "Qur'an",
-      icon: BookOpen,
+      icon: RiBookOpenLine,
       gradient: 'from-[#fdb849] to-[#e59523]',
       activeShadow: 'shadow-amber-500/25',
       accentColor: '#e59523',
@@ -24,7 +29,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     {
       id: 'mosques' as const,
       label: 'Mosques',
-      icon: Landmark,
+      icon: RiAncientPavilionLine,
       badge: mosqueCount !== undefined && mosqueCount > 0 ? mosqueCount : undefined,
       gradient: 'from-[#ff7d66] to-[#ea5d47]',
       activeShadow: 'shadow-red-500/25',
@@ -33,7 +38,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     {
       id: 'qibla' as const,
       label: 'Qibla',
-      icon: Compass,
+      icon: RiCompass3Line,
       gradient: 'from-[#a987df] to-[#8c67c5]',
       activeShadow: 'shadow-purple-500/25',
       accentColor: '#8c67c5',
@@ -41,7 +46,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     {
       id: 'offline' as const,
       label: 'Saved',
-      icon: BookmarkCheck,
+      icon: RiBookmark3Line,
       gradient: 'from-[#3cc1a9] to-[#1f9a84]',
       activeShadow: 'shadow-teal-500/25',
       accentColor: '#1f9a84',
